@@ -12,23 +12,13 @@ use Codrasil\Traverser\Traverser;
  */
 class TraverserTest extends TestCase
 {
-    public function menus()
-    {
-        $path = realpath(__DIR__.'/../factories/menus.php');
-
-        return [
-            [file_exists($path) ? require $path : [], [], true]
-        ];
-    }
-
     /**
-     * @test
      * @group  unit
      * @group  unit:traverser
-     * @dataProvider  menus
+     * @dataProvider  menusProvider
      * @return void
      */
-    public function it_accepts_arrays_of_items_upon_initialization($menus)
+    public function testItAcceptsArraysOfItemsUponInitialization($menus)
     {
         $traverser = new Traverser($menus);
 
@@ -37,32 +27,59 @@ class TraverserTest extends TestCase
     }
 
     /**
-     * @test
      * @group  unit
      * @group  unit:traverser
-     * @dataProvider  menus
+     * @depends testItAcceptsArraysOfItemsUponInitialization
+     * @dataProvider  menusWithOptionsProvider
      * @return void
      */
-    public function it_accepts_arrays_of_options_upon_initialization($array)
+    public function testItAcceptsArraysOfOptionsUponInitialization($provider)
     {
-        // $traverser = new Traverser($array, $options);
+        $traverser = new Traverser($provider['menus'], $provider['options']);
 
-        // $this->assertInstanceof('\Codrasil\Traverser\Traverser', $traverser);
-        // $this->assertInternalType('array', $traverser->items());
+        $this->assertInstanceof('\Codrasil\Traverser\Traverser', $traverser);
+        $this->assertInternalType('array', $traverser->options());
+        $this->assertEquals($provider['options']['id'], $traverser->options('id'));
+        $this->assertEquals($traverser->options('siblings'), 'siblings');
     }
 
     /**
-     * @test
      * @group  unit
      * @group  unit:traverser
-     * @dataProvider  menus
+     * @dataProvider  menusWithOptionsProvider
      * @return void
      */
-    public function it_builds_the_array_into_adjacent_list($array)
+    public function testItBuildsTheArrayIntoAdjacentList($provider)
     {
-        $traverser = new Traverser($array);
+        $traverser = new Traverser($provider['menus']);
         $traverser->build();
 
-        // $this->
+        $this->assertInternalType('array', $traverser->get());
+        $this->assertTrue(in_array($provider['menus'], $traverser->get()));
+    }
+
+    public function menusProvider()
+    {
+        $path = realpath(__DIR__.'/../factories/menus.php');
+
+        return [
+            ['menus' => file_exists($path) ? require $path : []],
+        ];
+    }
+
+    public function menusWithOptionsProvider()
+    {
+        $path = realpath(__DIR__.'/../factories/menus.php');
+
+        return [
+            [[
+                'menus' => file_exists($path) ? require $path : [],
+                'options' => [
+                    'id' => 'name',
+                    'parent' => 'parent',
+                    'children' => 'children',
+                ],
+            ]],
+        ];
     }
 }
