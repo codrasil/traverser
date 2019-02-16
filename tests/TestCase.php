@@ -1,6 +1,6 @@
 <?php
 
-namespace Codrasil\Traverser\Test;
+namespace Codrasil\Tree\Test;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
