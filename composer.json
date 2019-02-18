@@ -1,5 +1,5 @@
 {
-  "name": "codrasil/traverser",
+  "name": "codrasil/tree",
   "description": "PHP Library to generate an adjacent list from array.",
   "keywords": ["traversable", "adjacent", "hierarchy"],
   "license": "MIT",
@@ -17,13 +17,16 @@
     "phpunit/phpunit": "6.*"
   },
   "autoload": {
+    "files": [
+      "src/helpers.php"
+    ],
     "psr-4": {
-      "Codrasil\\Traverser\\": "src/"
+      "Codrasil\\Tree\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Codrasil\\Traverser\\Test\\": "tests/"
+      "Codrasil\\Tree\\Test\\": "tests/"
     }
   }
 }
