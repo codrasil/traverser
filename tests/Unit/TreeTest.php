@@ -73,6 +73,7 @@ class TreeTest extends TestCase
     public function testItCanRetrieveAncestors($provider)
     {
         $menus = new Tree($provider['menus'], $provider['options']);
+        $menus->build();
 
         $this->assertInternalType('array', $menus->ancestors('users.roles'));
         $this->assertEquals(2, count($menus->ancestors('users.roles')));
@@ -87,9 +88,38 @@ class TreeTest extends TestCase
     public function testItCanRetrieveDescendants($provider)
     {
         $menus = new Tree($provider['menus'], $provider['options']);
+        $menus->build();
 
         $this->assertInternalType('array', $menus->descendants('module:user'));
-        $this->assertEquals(3, count($menus->descendants('module:user')));
+        $this->assertEquals(4, count($menus->descendants('module:user')));
+    }
+
+    /**
+     * @group  unit
+     * @group  unit:tree
+     * @dataProvider  menusWithOptionsProvider
+     * @return void
+     */
+    public function testItCanRetrieveParent($provider)
+    {
+        $menus = new Tree($provider['menus'], $provider['options']);
+        $menus->build();
+
+        $this->assertInstanceof('\Codrasil\Tree\Branch', $menus->parent('module:user'));
+    }
+
+    /**
+     * @group  unit
+     * @group  unit:tree
+     * @dataProvider  menusWithOptionsProvider
+     * @return void
+     */
+    public function testItCanRetrieveSiblings($provider)
+    {
+        $menus = new Tree($provider['menus'], $provider['options']);
+        $menus->build();
+
+        $this->assertInstanceof('\Codrasil\Tree\Branch', $menus->parent('module:user'));
     }
 
     public function menusProvider()

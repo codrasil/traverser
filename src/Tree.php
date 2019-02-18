@@ -110,6 +110,8 @@ class Tree
         $options = $this->options();
         $this->unsettables = [];
 
+        $items = [];
+
         foreach ($nodes as $name => &$node) {
             if ($node->hasParent()) {
                 $parent = $this->find($node->parent());
@@ -163,11 +165,29 @@ class Tree
      * Retrieve the flat
      * \Codrasil\Tree\Branch array.
      *
+     * @param string $root
      * @return array
      */
-    public function flat()
+    public function flat($key = null, $nodes = null)
     {
-        //
+        $key = $key ?? $this->options('children');
+        $nodes = $nodes ?? $this->nodes();
+        $items = [];
+
+        foreach ($nodes as $parent => $node) {
+            if ($node->hasChild() && $children = $node->children()) {
+                foreach ($children as $child) {
+                    $child->set('parent', $parent);
+                    if ($child->hasChild()) {
+                        $items = $this->flatten($key, $child->children());
+                    }
+                }
+                $items = array_merge($items, $children);
+                unset($nodes[$parent][$key]);
+            }
+        }
+
+        return $items;
     }
 
     /**
@@ -184,7 +204,7 @@ class Tree
             $item1 = (array) $item1;
             $item2 = (array) $item2;
             if (isset($item1[$this->options('order')]) && isset($item2[$this->options('order')])) {
-                return (int) $item1[$this->options('order')] <=> (int) $item2[$this->options('order')];
+                return $item1[$this->options('order')] <=> $item2[$this->options('order')];
             }
 
             return -1;
@@ -232,7 +252,7 @@ class Tree
      */
     public function find($name, $nodes = null)
     {
-        foreach ($nodes ?? $this->nodes() as $keyname => $node) {
+        foreach ($nodes ?? $this->nodes() as $keyname => &$node) {
             if ($keyname === $name) {
                 return $node;
             }
@@ -245,7 +265,7 @@ class Tree
             }
         }
 
-        foreach ($this->flattens as $keyname => $node) {
+        foreach ($this->flattens as $keyname => &$node) {
             if ($keyname === $name) {
                 if (is_array($node)) {
                     return $this->branch($node);

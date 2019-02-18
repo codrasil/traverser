@@ -40,7 +40,7 @@ return [
         'route:name' => 'users.trashed',
         'parent' => 'module:user',
         'text' => 'Trashed User',
-        'order' => 3,
+        'order' => 100,
         'description' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
     ],
     'module:dashboard' => [

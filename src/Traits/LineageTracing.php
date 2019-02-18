@@ -35,14 +35,15 @@ trait LineageTracing
      * Retrieve the nodes descendants.
      *
      * @param string $key
+     * @param array  $nodes
      * @return array
      */
-    public function descendants($key)
+    public function descendants($key, $nodes = null)
     {
         $node = $this->find($key);
-        $options = $this->options();
+        $tree = [];
 
-        foreach ($this->flatten() as $name => $descendant) {
+        foreach ($nodes ?? $this->get() as $name => $descendant) {
             if ($node->left() < $descendant->left() && $node->right() > $descendant->right()) {
                 $tree[] = $descendant;
             }
@@ -56,17 +57,29 @@ trait LineageTracing
         return $tree ?? [];
     }
 
-    public function parent($left, $right)
+    /**
+     * Retrieve the parent of the node.
+     * @param string $key
+     * @return \Codrasil\Tree\Branch
+     */
+    public function parent($key)
     {
-        $ancestors = $this->ancestors($left, $right);
+        $node = $this->find($key);
+        $parent = $this->find($node->parent());
 
-        return end($ancestors);
+        return $parent;
     }
 
-    public function siblings($left, $right)
+    /**
+     * Retrieve the siblings of the given node.
+     *
+     * @param string $key
+     * @return array
+     */
+    public function siblings($key)
     {
-        $parent = $this->parent($left, $right);
+        $parent = $this->parent($key);
 
-        return $parent['children'];
+        return $parent->children();
     }
 }
