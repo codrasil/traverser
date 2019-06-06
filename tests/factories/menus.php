@@ -1,6 +1,22 @@
 <?php
 
 return [
+    'module:blog' => [
+        'name' => 'module:blog',
+        'route:url' => 'https://localhost.sample/admin/blog',
+        'route:name' => 'blogs',
+        'text' => 'Blogs',
+        'description' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+        'order' => 101,
+    ],
+    'module:tree' => [
+        'name' => 'module:tree',
+        'route:url' => 'https://localhost.sample/admin/tree',
+        'route:name' => 'trees',
+        'text' => 'Tree',
+        'description' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+        'order' => 101,
+    ],
     'module:user' => [
         'name' => 'module:user',
         'route:url' => 'https://localhost.sample/admin/user',

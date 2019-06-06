@@ -116,9 +116,14 @@ class Tree
             if ($node->hasParent()) {
                 $parent = $this->find($node->parent());
                 $parent->addChild([$node->key() => $node]);
-                $this->unsettables[] = $name;
+
+                if ($node->parent() != 'root') {
+                    $this->unsettables[] = $name;
+                }
             }
         }
+
+        $this->set($nodes);
 
         $this->prune();
 
@@ -203,6 +208,7 @@ class Tree
         uasort($nodes, function ($item1, $item2) {
             $item1 = (array) $item1;
             $item2 = (array) $item2;
+
             if (isset($item1[$this->options('order')]) && isset($item2[$this->options('order')])) {
                 return $item1[$this->options('order')] <=> $item2[$this->options('order')];
             }
