@@ -1,4 +1,5 @@
 <?php
+// ini_set('xdebug.max_nesting_level', 200);
 
 include __DIR__.'/../vendor/autoload.php';
 include __DIR__.'/../src/Tree.php';
@@ -6,9 +7,9 @@ include __DIR__.'/../src/Branch.php';
 
 use Codrasil\Tree\Tree;
 
-$provider = require __DIR__.'/factories/menus.php';
+$provider = require __DIR__.'/factories/menus.multilevel.php';
 
-$menus = new Tree($provider, ['key' => 'name']);
+$menus = new Tree($provider['enabled'], ['key' => 'name']);
 
 echo "<style>body{background:#eee;font-family:'Fira Mono','Ubuntu Mono',monospace;}</style>";
 
