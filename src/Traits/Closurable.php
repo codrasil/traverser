@@ -41,7 +41,7 @@ trait Closurable
                 $node[$options['parent']] = 'root';
             }
 
-            if ($parent === $node[$options['parent']]) {
+            if ($parent === $node[$options['parent']] && 'root' !== $node[$options['key']]) {
                 $right = $this->traverse($node[$options['key']], $right);
             }
         }

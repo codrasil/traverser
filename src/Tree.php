@@ -115,11 +115,8 @@ class Tree
         foreach ($nodes as $name => &$node) {
             if ($node->hasParent()) {
                 $parent = $this->find($node->parent());
-                $parent->addChild([$node->key() => $node]);
-
-                if ($node->parent() != 'root') {
-                    $this->unsettables[] = $name;
-                }
+                $nodes[$parent->key()]->addChild([$node->key() => $node]);
+                $this->unsettables[] = $name;
             }
         }
 
@@ -149,7 +146,7 @@ class Tree
             if (isset($node[$key]) && $children = $node[$key]) {
                 foreach ($children as &$child) {
                     $child['parent'] = $parent;
-                    $child['order'] = $child['order'] ?? 0;
+                    $child['order'] = $child['order'] ?? 1;
                     if (isset($child[$key])) {
                         $this->flatten($key, $child[$key]);
                     }
@@ -204,17 +201,23 @@ class Tree
     protected function order($nodes = null)
     {
         $nodes = (array) ($nodes ?? $this->nodes());
+        $order = array_column($nodes, 'order');
 
-        uasort($nodes, function ($item1, $item2) {
-            $item1 = (array) $item1;
-            $item2 = (array) $item2;
+        array_multisort($order, SORT_ASC, $nodes);
+        // uasort($nodes, function ($item1, $item2) {
+        //     $item1 = (array) $item1;
+        //     $item2 = (array) $item2;
 
-            if (isset($item1[$this->options('order')]) && isset($item2[$this->options('order')])) {
-                return $item1[$this->options('order')] <=> $item2[$this->options('order')];
-            }
+        //     return strcmp($a[$this->options('order')], $b[$this->options('order')]);
 
-            return -1;
-        });
+        //     if (isset($item1[$this->options('order')]) && isset($item2[$this->options('order')])) {
+        //         if ($item1[$this->options('order')] == $item2[$this->options('order')]) {
+        //             return 1;
+        //         }
+
+        //         return 0;
+        //     }
+        // });
 
         $this->set($nodes);
     }
@@ -297,7 +300,7 @@ class Tree
      * Retrieve or set the options array.
      *
      *
-     * @param string $key
+     * @param  mixed $key
      * @return array
      */
     public function options($key = null)
@@ -421,5 +424,20 @@ class Tree
             $this->options('children') => [],
             $this->options('order') => 0,
         ]];
+    }
+
+    function stable_uasort(array &$array, $value_compare_func) {
+        $index = 0;
+        foreach ($array as &$item) {
+            $item = array($index++, $item);
+        }
+        $result = uasort($array, function($a, $b) use($value_compare_func) {
+            $result = call_user_func($value_compare_func, $a[1], $b[1]);
+            return $result == 0 ? $a[0] - $b[0] : $result;
+        });
+        foreach ($array as &$item) {
+            $item = $item[1];
+        }
+        return $result;
     }
 }
