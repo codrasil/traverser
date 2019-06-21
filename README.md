@@ -23,7 +23,7 @@ $ composer require codrasil/tree
 ```json
 {
     "require": {
-        "codrasil/tree": "^1.0.0"
+        "codrasil/tree": "^1.*"
     }
 }
 ```
