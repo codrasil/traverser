@@ -1,6 +1,6 @@
 {
   "name": "codrasil/tree",
-  "description": "PHP Library to generate an adjacent list from array.",
+  "description": "PHP Library to generate a hierarchical tree list from array.",
   "keywords": ["traversable", "adjacent", "hierarchy"],
   "license": "MIT",
   "authors": [
