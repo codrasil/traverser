@@ -5,7 +5,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/codrasil/tree/v/unstable)](https://packagist.org/packages/codrasil/tree)
 [![License](https://poser.pugx.org/codrasil/tree/license)](https://packagist.org/packages/codrasil/tree)
 
-PHP Library to generate an adjacent list from array. Ideal for creating menus, sidebars, and any nested resources.
+PHP Library to generate a hierarchical tree list from array. Ideal for creating menus, sidebars, and any nested resources.
 
 <br>
 
